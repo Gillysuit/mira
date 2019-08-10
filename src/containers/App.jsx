@@ -1,13 +1,11 @@
-//wrapper container for the entire react
-import React, {Component} from "react";
-// import store from "../store";
-import MainContainer from "./mainContainer";
-import Menu from "../components/Menu.jsx"
-import Login from "../components/Login.jsx"
-import Welcome from "../components/Welcome.jsx"
-import FlexLogin from "../components/FlexLogin.jsx"
-import * as actions from "../actions/actions.js";
+// wrapper container for the entire react
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import MainContainer from './mainContainer';
+import Menu from '../components/Menu';
+import FlexLogin from '../components/FlexLogin';
+import * as actions from '../actions/actions';
+
 
 // mainprocess.test() // was testing for credentials
 const mapStateToProps = store => ({
@@ -21,35 +19,34 @@ const mapStateToProps = store => ({
   finishedFlag: store.graph.fetched,
   publicKey: store.login.awsPublicKey,
   privateKey: store.login.awsPrivateKey,
-  loginKey: store.login.loginKey
+  loginKey: store.login.loginKey,
 })
 
 const mapDispatchToProps = dispatch => ({
-  //get data on one single region
-    getAWSInstances: (instances, key1, key2) => {
-        dispatch(actions.getAWSInstances(instances, key1, key2));
-    },
-    //show details on specific nodes on click
-    getNodeDetails: (data) => {
-      dispatch(actions.getNodeDetails(data));
-    },
+  // get data on one single region
+  getAWSInstances: (instances, key1, key2) => {
+    dispatch(actions.getAWSInstances(instances, key1, key2));
+  },
+  // show details on specific nodes on click
+  getNodeDetails: (data) => {
+    dispatch(actions.getNodeDetails(data));
+  },
 
-    getAllRegions: (publicKey, privateKey) => {
-      dispatch(actions.getAllRegions(publicKey,privateKey));
-    },
-    //get credentials from folder on computer
-    getAWSKeys: (keys) => {
-      dispatch(actions.getAWSKeys(keys));
-    },
-    //login state 
-    logIn: () => {
-      dispatch(actions.logIn());
-    }
-})
+  getAllRegions: (publicKey, privateKey) => {
+    dispatch(actions.getAllRegions(publicKey,privateKey));
+  },
+  // get credentials from folder on computer
+  getAWSKeys: (keys) => {
+    dispatch(actions.getAWSKeys(keys));
+  },
+  // login state
+  logIn: () => {
+    dispatch(actions.logIn());
+  },
+});
 
-class App extends Component{
-
-  render(){
+export const App = () => {
+  render() { 
     let display = [];
     let loginWelcome = <FlexLogin loginKey={this.props.loginKey} logIn={this.props.logIn}/>;
     display.push(<Menu activeNode={this.props.activeNode} publicKey={this.props.publicKey} privateKey={this.props.privateKey} getAWSInstances={this.props.getAWSInstances} currentRegion={this.props.currentRegion} getAllRegions={this.props.getAllRegions} />);
