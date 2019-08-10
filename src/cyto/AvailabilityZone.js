@@ -1,10 +1,10 @@
 export default class AvailabilityZone {
-  constructor(id, parent){
+  constructor(id, parent) {
     this.id = id;
     this.parent = parent;
   }
 
-  getAvailabilityZoneObject(){
-      return { data: { id: this.parent+'-'+this.id, parent:this.parent, label: this.id}, classes: "availabilityZone"};
+  getAvailabilityZoneObject() {
+    return { data: { id: this.parent+'-'+this.id, parent:this.parent, label: this.id}, classes: "availabilityZone"};
   }
 }
