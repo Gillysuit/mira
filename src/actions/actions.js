@@ -1,7 +1,6 @@
 // ACTIONS JS --> update RDS sdk, it's currently crashing on select/click
-
-import * as actionTypes from '../constants/actionTypes.js';
 import axios from 'axios';
+import * as actionTypes from '../constants/actionTypes';
 import compileGraphData from '../assets/compileGraphData'
 
 const AWS = require('aws-sdk');
@@ -10,16 +9,16 @@ const params = {};
 
 export const logIn = () => ({
   type: actionTypes.LOG_IN,
-})
+});
 
 export const logOut = () => ({
   type: actionTypes.LOG_OUT,
-})
+});
 
 export const getAWSKeys = (keys) => ({
   type: actionTypes.GET_AWS_KEYS,
   payload: keys
-})
+});
 
 export const getAWSInstancesStart = () => ({
   type: actionTypes.GET_AWS_INSTANCES_START,
@@ -34,19 +33,19 @@ export const getAWSInstancesError = err => ({
   type: actionTypes.GET_AWS_INSTANCES_ERROR,
   payload: err,
 });
-//each service can have more than one security group. We find each security group and 
-//which other SG they are connected to through in-bound and out-bound
+// each service can have more than one security group. We find each security group and 
+// which other SG they are connected to through in-bound and out-bound
 
 export const getAWSInstances = (region, key1, key2) => {
-  //sdk config to send in the region
+  // sdk config to send in the region
   AWS.config.update({
     region,  // since we figure out we get info for this region
   });
-  //to allow api calls you create a new instance of ec2 and rds --> allows method
-  //like a mongoose model
+  // to allow api calls you create a new instance of ec2 and rds --> allows method
+  // like a mongoose model
   const ec2 = new AWS.EC2({});  // create object of whatever instance works
   const rds = new AWS.RDS({});
-  //const s3 = new AWS.S3({});
+  // const s3 = new AWS.S3({});
   return (dispatch) => {
     dispatch(getAWSInstancesStart());
     /** HOW WE WANT THE DATA TO IDEALLY BE FORMATTED:
@@ -80,18 +79,16 @@ export const getAWSInstances = (region, key1, key2) => {
     apiPromiseArray.push(new Promise(((resolve, reject) => {
       const innerPromiseArray = [];
       // make an api call to get information about RDS'
-      //params is empty, to gell all rds in that region!
+      // params is empty, to gell all rds in that region!
       rds.describeDBInstances(params, (err, data) => {
         if (err) {
-          console.log(err, err.stack);
           reject();
         } // an error occurred
         else {
           // loop through the data returned from api call
-          //console log what comes in the data to see if there's anymore useful info
-          //we can use later
-          for (let i = 0; i < data.DBInstances.length; i++) {
-
+          // console log what comes in the data to see if there's anymore useful info
+          // we can use later
+          for (let i = 0; i < data.DBInstances.length; i += 1) {
             const DBinstances = data.DBInstances[i];
             // destructure the data for relevant data
             const {
@@ -106,10 +103,10 @@ export const getAWSInstances = (region, key1, key2) => {
               const param = {
                 GroupIds: [],
               };
-              for (let k = 0; k < VpcSecurityGroups.length; k++) {
+              for (let k = 0; k < VpcSecurityGroups.length; k += 1) {
                 param.GroupIds.push(VpcSecurityGroups[k].VpcSecurityGroupId);
               }
-              //send in params for ec2 method to choose specific ec2 linked to the RDS's we found
+              // send in params for ec2 method to choose specific ec2 linked to the RDS's we found
               ec2.describeSecurityGroups(param, (err, data) => {
                 if (err) {
                   console.log(err, err.stack);
@@ -199,8 +196,8 @@ export const getAWSInstances = (region, key1, key2) => {
       });
     })));
 
-    //get S3 data
-    apiPromiseArray.push( new Promise((mainResolve, mainReject) => {
+    // get S3 data
+    apiPromiseArray.push(new Promise((mainResolve, mainReject) => {
       axios({
         method: 'post',
         url: 'https://graphql-compose.herokuapp.com/aws/',
@@ -680,8 +677,8 @@ export const getAllRegions = (publicKey, privateKey) => {
          }
           
         
-        `
-      }
+        `,
+      },
     }).then((result) => {
       const aws = result.data.data.aws;
       let graphData = new compileGraphData();
@@ -811,7 +808,7 @@ export const getAllRegions = (publicKey, privateKey) => {
         }));
       }
 
-      //lambda
+      // lambda
       for (let regions in lambda) {
         const regionArray = regions.split("_")
         const regionString = regionArray[0] + "-" + regionArray[1] + "-" + regionArray[2];
@@ -838,9 +835,9 @@ export const getAllRegions = (publicKey, privateKey) => {
               currentRegion: 'all',
             },
           });
-        })
-      })
+        });
+      });
       // end of promise
-    })
-  }
-}
+    });
+  };
+};
