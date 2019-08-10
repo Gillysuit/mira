@@ -246,7 +246,7 @@ class Cyto extends PureComponent {
         <div className="node_selected">
             <div id="cy"></div>
         </div>
-    )
+    );
   }
 }
 
